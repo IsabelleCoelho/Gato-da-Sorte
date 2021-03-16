@@ -36,7 +36,27 @@ void definicaoIluminacao(){
     glLightfv(GL_LIGHT1, GL_POSITION, posicaoLuz1);
 }
 
-void display(void){
+void animacao(){
+    if(levantado == true){
+        braco = (braco + 1) % 90;
+        glutPostRedisplay();
+    }
+    else{
+        braco = (braco-1) % 90;
+        glutPostRedisplay();
+    }
+    if(braco == 0){
+        if(levantado == true){
+            levantado = false;
+            braco = 85;
+        }
+        else{
+            levantado = true;
+        }
+    }
+}
+
+void display(){
     glClear (GL_COLOR_BUFFER_BIT);
     definicaoIluminacao();
     glPushMatrix();
@@ -71,23 +91,8 @@ void display(void){
             glTranslatef (0.75, 0.0, 0.0);
             glRotatef ((GLfloat) braco, 1.0, 0.0, 0.0);
             glTranslatef (0.0, 0.5, 0.0);
-            if(levantado==true){
-                braco= (braco+1) % 180;
-                glutPostRedisplay();
-            }
-            else{
-                braco= (braco-1) % 180;
-                glutPostRedisplay();
-            }
-            if(braco==0){
-                if(levantado==true){
-                    levantado = false;
-                    braco = 175;
-                }
-                else{
-                    levantado = true;
-                }
-            }
+            //chamada da função responsável pela animação da pata
+            animacao();
             glPushMatrix();
                 glScalef (0.2, 0.8, 0.35);
                 glutSolidSphere (0.6, 10, 12);
