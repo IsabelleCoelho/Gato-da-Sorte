@@ -10,7 +10,6 @@ void init(){
     glShadeModel (GL_FLAT);
     glEnable(GL_LIGHT0);
     glEnable(GL_LIGHT1);
-    //glEnable(GL_LIGHTING);
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 }
@@ -122,10 +121,12 @@ void remodelar (int w, int h){
 
 void teclado (unsigned char key, int x, int y){
     switch (key) {
+        //Interação com o teclado que permite ativar a iluminação
         case 'L':
         case 'l':
             glEnable(GL_LIGHTING);
             break;
+        //Interação com o teclado que permite desativar a iluminação
         case 'D':
         case 'd':
             glDisable(GL_LIGHTING);
