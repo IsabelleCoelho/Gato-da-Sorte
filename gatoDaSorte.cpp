@@ -4,12 +4,13 @@
 GLfloat anguloHorizontal = 0.0;
 static int braco = 0;
 static bool levantado = true;
+
 void init(){
     glClearColor (0.0, 0.0, 0.0, 0.0);
     glShadeModel (GL_FLAT);
     glEnable(GL_LIGHT0);
     glEnable(GL_LIGHT1);
-    glEnable(GL_LIGHTING);
+    //glEnable(GL_LIGHTING);
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 }
@@ -121,13 +122,13 @@ void remodelar (int w, int h){
 
 void teclado (unsigned char key, int x, int y){
     switch (key) {
-        case 'P':
-            braco = (braco + 5) % 180;
-            glutPostRedisplay();
+        case 'L':
+        case 'l':
+            glEnable(GL_LIGHTING);
             break;
-        case 'p':
-            braco = (braco - 5) % 180;
-            glutPostRedisplay();
+        case 'D':
+        case 'd':
+            glDisable(GL_LIGHTING);
             break;
         default:
             break;
