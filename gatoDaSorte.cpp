@@ -3,7 +3,7 @@
 
 GLfloat anguloHorizontal = 0.0;
 static int braco = 0;
-
+static bool levantado = true;
 void init(){
     glClearColor (0.0, 0.0, 0.0, 0.0);
     glShadeModel (GL_FLAT);
@@ -71,6 +71,23 @@ void display(void){
             glTranslatef (0.75, 0.0, 0.0);
             glRotatef ((GLfloat) braco, 1.0, 0.0, 0.0);
             glTranslatef (0.0, 0.5, 0.0);
+            if(levantado==true){
+                braco= (braco+1) % 180;
+                glutPostRedisplay();
+            }
+            else{
+                braco= (braco-1) % 180;
+                glutPostRedisplay();
+            }
+            if(braco==0){
+                if(levantado==true){
+                    levantado = false;
+                    braco = 175;
+                }
+                else{
+                    levantado = true;
+                }
+            }
             glPushMatrix();
                 glScalef (0.2, 0.8, 0.35);
                 glutSolidSphere (0.6, 10, 12);
