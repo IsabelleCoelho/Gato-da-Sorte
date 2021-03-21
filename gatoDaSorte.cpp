@@ -1,9 +1,35 @@
 #include <GL/glut.h>
 #include <stdlib.h>
+#include <stdio.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
+/*	Create checkerboard texture	*/
+#define	checkImageWidth 64
+#define	checkImageHeight 64
+static GLubyte checkImage[checkImageHeight][checkImageWidth][4];
+
+#ifdef GL_VERSION_1_1
+static GLuint texName;
+#endif
 GLfloat anguloHorizontal = 0.0;
 static int braco = 0;
 static bool levantado = true;
+
+void makeCheckImage(void)
+{
+   int i, j, c;
+    
+   for (i = 0; i < checkImageHeight; i++) {
+      for (j = 0; j < checkImageWidth; j++) {
+         c = ((((i&0x8)==0)^((j&0x8))==0))*255;
+         checkImage[i][j][0] = (GLubyte) c;
+         checkImage[i][j][1] = (GLubyte) c;
+         checkImage[i][j][2] = (GLubyte) c;
+         checkImage[i][j][3] = (GLubyte) 255;
+      }
+   }
+}
 
 void init(){
     glClearColor (0.0, 0.0, 0.0, 0.0);
@@ -12,6 +38,25 @@ void init(){
     glEnable(GL_LIGHT1);
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+    glEnable(GL_DEPTH_TEST);
+
+   makeCheckImage();
+   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+#ifdef GL_VERSION_1_1
+   glGenTextures(1, &texName);
+   glBindTexture(GL_TEXTURE_2D, texName);
+#endif
+
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+   int width, height, nrChannels;
+   unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+   if (data) {
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+   }
 }
 
 void definicaoIluminacao(){
@@ -57,9 +102,27 @@ void animacao(){
 }
 
 void display(){
-    glClear (GL_COLOR_BUFFER_BIT);
+    glClear (GL_COLOR_BUFFER_BIT  | GL_DEPTH_BUFFER_BIT);
     definicaoIluminacao();
     glPushMatrix();
+    glPushMatrix();
+    glEnable(GL_TEXTURE_2D);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+    #ifdef GL_VERSION_1_1
+    glBindTexture(GL_TEXTURE_2D, texName);
+    #endif
+    glRotatef(-50.0, 1, 0, 0);
+    glTranslatef(1, 0, 0);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0); glVertex3f(-2.0, -1.0, 0.0);
+    glTexCoord2f(0.0, 1.0); glVertex3f(-2.0, 1.0, 0.0);
+    glTexCoord2f(1.0, 1.0); glVertex3f(0.0, 1.0, 0.0);
+    glTexCoord2f(1.0, 0.0); glVertex3f(0.0, -1.0, 0.0);
+    
+    glEnd();
+    glFlush();
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
     glRotatef(anguloHorizontal,0.0f,1.0f,0.0f); 
         //corpo
         glPushMatrix();
