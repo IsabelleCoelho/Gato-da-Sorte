@@ -105,25 +105,24 @@ void display(){
     glClear (GL_COLOR_BUFFER_BIT  | GL_DEPTH_BUFFER_BIT);
     definicaoIluminacao();
     glPushMatrix();
+    glRotatef(anguloHorizontal,0.0f,1.0f,0.0f);
     glPushMatrix();
     glEnable(GL_TEXTURE_2D);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
     #ifdef GL_VERSION_1_1
     glBindTexture(GL_TEXTURE_2D, texName);
     #endif
-    glRotatef(-50.0, 1, 0, 0);
-    glTranslatef(1, 0, 0);
+    glRotatef(-85.0, 1, 0, 0);
+    glTranslatef(1, 0, -0.75);
     glBegin(GL_QUADS);
     glTexCoord2f(0.0, 0.0); glVertex3f(-2.0, -1.0, 0.0);
     glTexCoord2f(0.0, 1.0); glVertex3f(-2.0, 1.0, 0.0);
     glTexCoord2f(1.0, 1.0); glVertex3f(0.0, 1.0, 0.0);
     glTexCoord2f(1.0, 0.0); glVertex3f(0.0, -1.0, 0.0);
-    
     glEnd();
     glFlush();
     glDisable(GL_TEXTURE_2D);
-    glPopMatrix();
-    glRotatef(anguloHorizontal,0.0f,1.0f,0.0f); 
+    glPopMatrix(); 
         //corpo
         glPushMatrix();
         glutSolidSphere(0.77, 30, 16);
